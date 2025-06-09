@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Бронирование места №{{ seat.number }}</h2>
+<form method="POST">
+    <div>
+        <label for="name">Ваше имя:</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+    <div>
+        <label for="phone">Номер телефона:</label>
+        <input type="tel" id="phone" name="phone" required>
+    </div>
+    <button type="submit">Забронировать</button>
+        <p><a href="{{ url_for('events_list') }}" class="btn">← Назад к мероприятиям</a></p>
+
+</form>
+{% endblock %}

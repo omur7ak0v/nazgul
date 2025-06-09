@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Бронирование мероприятий{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>Бронирование городских мероприятий</h1>
+            <p>Выбирайте места на самые интересные события города</p>
+
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="{{ url_for('events_list') }}">Все мероприятия</a></li>
+                    <li><a href="{{ url_for('my_bookings') }}">Мои бронирования</a></li> 
+                    
+                    {# Условное отображение кнопки "Добавить мероприятие" #}
+                    {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('add_event') }}">Добавить мероприятие</a></li>
+                    {% endif %}
+
+                    {# Условное отображение кнопки "Выйти" #}
+                    {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('logout') }}">Выйти</a></li>
+                    {% else %}
+                    {# Если хотите, можно добавить ссылку на вход, если пользователь не авторизован #}
+                    <li><a href="{{ url_for('login') }}">Войти</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+
+        </div>
+    </header>
+
+    <main class="container animated">
+        {# Блок flash-сообщений уже есть, это хорошо! #}
+        {% with messages = get_flashed_messages(with_categories=true) %} {# Добавил with_categories=true для более
+        точного контроля #}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %} {# Изменил, чтобы использовать category #}
+            <div class="flash-message {{ category }}">{{ message }}</div> {# Добавил класс категории #}
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 Администрация города. Все права защищены.</p>
+        </div>
+    </footer>
+    <button id="toTop" title="Наверх">↑</button>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

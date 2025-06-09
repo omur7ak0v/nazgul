@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Мои бронирования{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Мои бронирования</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form method="GET" action="{{ url_for('my_bookings') }}">
+        <label for="phone">Введите номер телефона для просмотра бронирований:</label><br>
+        <input type="text" id="phone" name="phone" value="{{ request.args.get('phone', '') }}" placeholder="Например, 1234567890" required><br><br>
+        <input class="mybtn" type="submit" value="Найти бронирования">
+    </form>
+
+    {% if bookings %}
+        <h2>Ваши бронирования:</h2>
+        <ul class="bookings-list">
+            {% for booking in bookings %}
+            <li>
+                <strong>Мероприятие:</strong> {{ booking.seat.event.name }}<br>
+                <strong>Место:</strong> {{ booking.seat.number }}<br>
+                <strong>Дата:</strong> {{ booking.seat.event.date.strftime('%d.%m.%Y %H:%M') }}<br>
+                <strong>Статус:</strong> Подтверждено<br>
+                <hr>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {% if request.args.get('phone') %}
+            <p>Бронирований по этому номеру не найдено.</p>
+        {% endif %}
+    {% endif %}
+
+    {# ДОБАВЬТЕ ЭТУ СТРОКУ В КОНЦЕ СОДЕРЖИМОГО СТРАНИЦЫ #}
+    <p><a href="{{ url_for('events_list') }}" class="btn">← Назад к мероприятиям</a></p>
+
+</div>
+{% endblock %}

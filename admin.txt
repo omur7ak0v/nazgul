@@ -1,0 +1,15 @@
+with app.app_context():
+    # Проверяем, существует ли пользователь 'admin' уже
+    admin_user = User.query.filter_by(username='admin').first()
+    if admin_user:
+        print("Пользователь 'admin' уже существует. Обновляем его пароль.")
+        # Если хотите обновить пароль существующего админа:
+        hashed_password = bcrypt.generate_password_hash('test').decode('utf-8')
+        admin_user.password = hashed_password
+    else:
+        print("Создаем нового пользователя 'admin'.")
+        hashed_password = bcrypt.generate_password_hash('test').decode('utf-8')
+        admin_user = User(username='admin', password=hashed_password)
+        db.session.add(admin_user)
+    db.session.commit()
+    print("Пользователь 'admin' добавлен/обновлен с паролем 'test'.")
